@@ -2,11 +2,13 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Loader from './components/Loader';
+import CartSidebar from './components/CartSidebar';
 
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const currentYear = new Date().getFullYear();
   const [isLoading, setIsLoading] = useState(true);
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   useEffect(() => {
     // Simular carga inicial
@@ -44,11 +46,14 @@ export default function Home() {
               </div>
 
               {/* Cart Icon */}
-              <Link href="/checkout" className="text-[#A83935] hover:text-[#5B0E2D]">
+              <button 
+                onClick={() => setIsCartOpen(true)} 
+                className="text-[#A83935] hover:text-[#5B0E2D]"
+              >
                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
                 </svg>
-              </Link>
+              </button>
 
               {/* Hamburger Menu Button */}
               <button 
@@ -94,7 +99,7 @@ export default function Home() {
         style={{ backgroundImage: "url('/hero/hero_bg.png')" }}
       >
         <div className="text-center text-[#D4C1A1] max-w-4xl px-10">
-          <h1 className="text-5xl font-bold mb-8 leading-tight font-pinot uppercase">
+          <h1 className="text-5xl mb-2 leading-[0,13px] tracking-normal font-pinot uppercase">
             EL VINO RUEDA EN EL TIEMPO Y CRECE CON LA HISTORIA
           </h1>
           <a 
@@ -107,21 +112,51 @@ export default function Home() {
       </section>
 
       {/* Explorar Section */}
-      <section id="explorar" className="min-h-screen py-20">
+      <section id="explorar" className="min-h-screen py-20 bg-[#F4A6C0]">
         <div className="mx-10">
-          <h2 className="text-3xl font-bold mb-8 text-[#A83935] font-pinot uppercase">Explorar</h2>
+          <h2 className="text-3xl font-bold mb-8 text-[#5B0E2D] font-pinot uppercase">Weekly Wine</h2>
           
-          {/* Text content */}
-          <div className="max-w-3xl mb-16 space-y-6">
-            <p className="text-lg text-[#A83935]">
-              Descubrí nuestra selección de Clubes de Vino Natural, entregados directamente a tu casa y curados por nuestro apasionado equipo de Vino Rodante. Con envíos únicos cada vez, vas a experimentar vinos naturales diferentes en cada entrega.
-            </p>
-            <p className="text-lg font-medium text-[#A83935]">
-              ¡Todos los suscriptores se llevan un 10% de descuento en botellas, prioridad en vinos exclusivos e invitaciones a eventos especiales!
-            </p>
-            <p className="text-lg text-[#A83935]">
-              Sumergite en el mundo del vino natural con Vino Rodante, donde cada botella cuenta una historia y cada sorbo es una aventura.
-            </p>
+          {/* Two columns layout */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
+            {/* Left column */}
+            <div className="space-y-6">
+              <h3 className="text-2xl font-pinot text-[#5B0E2D] uppercase">Tu viaje semanal por el mundo del vino</h3>
+              <p className="text-lg text-[#5B0E2D]">
+                Weekly Wine es nuestra propuesta para explorar historias y contextos a través de botellas cuidadosamente seleccionadas. Cada semana, te acercamos vinos que narran la búsqueda de sus productores, el espíritu de su época y la evolución de la enología.
+              </p>
+              <div>
+                <h4 className="text-xl font-pinot text-[#5B0E2D] uppercase mb-4">Cómo funciona:</h4>
+                <p className="text-lg text-[#5B0E2D]">
+                  Cada viernes anunciamos una nueva selección. Tenés hasta el miércoles para reservar tu Weekly Wine, que recibirás en tu casa el jueves siguiente, justo a tiempo para disfrutarlo el fin de semana.
+                </p>
+              </div>
+            </div>
+
+            {/* Right column */}
+            <div className="space-y-6">
+              <h4 className="text-xl font-pinot text-[#5B0E2D] uppercase mb-4">Lo que nos hace diferentes:</h4>
+              <ul className="space-y-4 text-lg text-[#5B0E2D]">
+                <li className="flex items-start">
+                  <span className="mr-2">•</span>
+                  <span>Sin compromisos: Participás cuando querés, sin suscripciones obligatorias</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="mr-2">•</span>
+                  <span>Contexto y profundidad: Cada vino viene con su historia y trasfondo</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="mr-2">•</span>
+                  <span>Curaduría especializada: Seleccionamos vinos que representan momentos significativos en la evolución vitivinícola</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="mr-2">•</span>
+                  <span>Puntualidad: Del productor a tu mesa en el momento perfecto</span>
+                </li>
+              </ul>
+              <p className="text-lg text-[#5B0E2D] mt-6">
+                Con Weekly Wine, no solo descubrís nuevos sabores, sino que te sumergís en un recorrido que conecta el pasado, presente y futuro del vino, invitándote a reflexionar sobre cada copa desde una nueva perspectiva.
+              </p>
+            </div>
           </div>
 
           {/* Product Cards */}
@@ -130,9 +165,9 @@ export default function Home() {
             <div className="bg-[#D9D3C8] rounded-lg shadow-lg overflow-hidden">
               <div className="h-48 bg-[#F99B79]"></div>
               <div className="p-6">
-                <h3 className="font-bold text-lg mb-2 text-[#A83935] font-pinot uppercase">Club Básico</h3>
-                <p className="text-[#A83935] mb-4">2 botellas mensuales de vino natural seleccionado</p>
-                <p className="font-bold text-xl text-[#A83935]">$45/mes</p>
+                <h3 className="font-bold text-lg mb-2 text-[#5B0E2D] font-pinot uppercase">Club Básico</h3>
+                <p className="text-[#5B0E2D] mb-4">2 botellas mensuales de vino natural seleccionado</p>
+                <p className="font-bold text-xl text-[#5B0E2D]">$45/mes</p>
               </div>
             </div>
 
@@ -140,9 +175,9 @@ export default function Home() {
             <div className="bg-[#D9D3C8] rounded-lg shadow-lg overflow-hidden">
               <div className="h-48 bg-[#F99B79]"></div>
               <div className="p-6">
-                <h3 className="font-bold text-lg mb-2 text-[#A83935] font-pinot uppercase">Club Premium</h3>
-                <p className="text-[#A83935] mb-4">4 botellas mensuales de vino natural premium</p>
-                <p className="font-bold text-xl text-[#A83935]">$85/mes</p>
+                <h3 className="font-bold text-lg mb-2 text-[#5B0E2D] font-pinot uppercase">Club Premium</h3>
+                <p className="text-[#5B0E2D] mb-4">4 botellas mensuales de vino natural premium</p>
+                <p className="font-bold text-xl text-[#5B0E2D]">$85/mes</p>
               </div>
             </div>
 
@@ -150,9 +185,9 @@ export default function Home() {
             <div className="bg-[#D9D3C8] rounded-lg shadow-lg overflow-hidden">
               <div className="h-48 bg-[#F99B79]"></div>
               <div className="p-6">
-                <h3 className="font-bold text-lg mb-2 text-[#A83935] font-pinot uppercase">Club Exclusivo</h3>
-                <p className="text-[#A83935] mb-4">3 botellas de edición limitada cada trimestre</p>
-                <p className="font-bold text-xl text-[#A83935]">$120/trimestre</p>
+                <h3 className="font-bold text-lg mb-2 text-[#5B0E2D] font-pinot uppercase">Club Exclusivo</h3>
+                <p className="text-[#5B0E2D] mb-4">3 botellas de edición limitada cada trimestre</p>
+                <p className="font-bold text-xl text-[#5B0E2D]">$120/trimestre</p>
               </div>
             </div>
 
@@ -160,9 +195,9 @@ export default function Home() {
             <div className="bg-[#D9D3C8] rounded-lg shadow-lg overflow-hidden">
               <div className="h-48 bg-[#F99B79]"></div>
               <div className="p-6">
-                <h3 className="font-bold text-lg mb-2 text-[#A83935] font-pinot uppercase">Club Descubrimiento</h3>
-                <p className="text-[#A83935] mb-4">6 botellas variadas cada semestre</p>
-                <p className="font-bold text-xl text-[#A83935]">$200/semestre</p>
+                <h3 className="font-bold text-lg mb-2 text-[#5B0E2D] font-pinot uppercase">Club Descubrimiento</h3>
+                <p className="text-[#5B0E2D] mb-4">6 botellas variadas cada semestre</p>
+                <p className="font-bold text-xl text-[#5B0E2D]">$200/semestre</p>
               </div>
             </div>
           </div>
@@ -223,6 +258,12 @@ export default function Home() {
           </a>
         </div>
       </footer>
+
+      {/* Add CartSidebar */}
+      <CartSidebar 
+        isOpen={isCartOpen} 
+        onClose={() => setIsCartOpen(false)} 
+      />
     </main>
   );
 }
