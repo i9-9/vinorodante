@@ -3,11 +3,13 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Product {
@@ -15,12 +17,11 @@ model Product {
   name        String
   description String
   price       Float
-  image       String?
+  image       String
   stock       Int
-  interval    String   // monthly, quarterly, biannual
+  interval    String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  orders      OrderItem[]
 }
 
 model Order {

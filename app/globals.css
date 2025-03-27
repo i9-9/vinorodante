@@ -7,12 +7,54 @@
   src: url('/fonts/pinot-grigio.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'Neue Haas Unica';
+  src: url('/fonts/NeueHaasUnica-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue Haas Unica';
+  src: url('/fonts/NeueHaasUnica-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue Haas Unica';
+  src: url('/fonts/NeueHaasUnica-Bold.woff2') format('woff2');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
 }
 
 @layer base {
-  h1, h2, h3 {
-    font-family: 'Pinot Grigio', serif;
-    text-transform: uppercase;
+  :root {
+    --background: #ffffff;
+    --foreground: #171717;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --background: #0a0a0a;
+      --foreground: #ededed;
+    }
+  }
+
+  body {
+    color: var(--foreground);
+    background: var(--background);
+    @apply font-sans;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: 'Pinot Grigio', serif !important;
   }
 }
 
@@ -29,22 +71,4 @@
   .animate-spin-y {
     animation: spin-y 2s linear infinite;
   }
-}
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
 }

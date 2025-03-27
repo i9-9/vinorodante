@@ -1,14 +1,16 @@
 'use client';
 
-import React from 'react';
+import Image from 'next/image';
 
 export default function Loader() {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-[#D4C1A1]">
-      <img 
+      <Image 
         src="/logo/logo2.svg" 
         alt="Loading..." 
-        className="h-24 w-24 animate-spin-y"
+        width={96}
+        height={96}
+        className="animate-spin-y"
       />
     </div>
   );
