@@ -1,0 +1,92 @@
+:root {
+  /* Color palette variables */
+  --color-beige: #DAD3C7;
+  --color-white: #FFFFFF;
+  --color-black: #000000;
+  /* Add more colors as needed */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+}
+
+/* Navbar styles */
+.navbar {
+  background-color: var(--color-beige);
+  padding: 1rem 2rem;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.logo img {
+  height: 40px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--color-black);
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* Hero section styles */
+.hero {
+  height: 100vh;
+  background-image: url('../assets/hero_bg.png');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding-top: 80px;
+}
+
+.hero-content {
+  color: var(--color-white);
+  max-width: 800px;
+  padding: 2rem;
+}
+
+.hero-title {
+  font-size: 3rem;
+  margin-bottom: 2rem;
+  line-height: 1.2;
+}
+
+.explore-btn {
+  display: inline-block;
+  padding: 1rem 2rem;
+  background-color: var(--color-beige);
+  color: var(--color-black);
+  text-decoration: none;
+  text-transform: uppercase;
+  font-weight: bold;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.explore-btn:hover {
+  background-color: var(--color-white);
+} 

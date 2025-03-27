@@ -2,6 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Pinot Grigio';
+  src: url('/fonts/pinot-grigio.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@layer base {
+  h1, h2, h3 {
+    font-family: 'Pinot Grigio', serif;
+    text-transform: uppercase;
+  }
+}
+
+@keyframes spin-y {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(360deg);
+  }
+}
+
+@layer utilities {
+  .animate-spin-y {
+    animation: spin-y 2s linear infinite;
+  }
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
