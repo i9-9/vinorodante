@@ -1,5 +1,5 @@
-const { PrismaClient } = require('@prisma/client')
-const bcrypt = require('bcrypt')
+import { PrismaClient } from '@prisma/client'
+import bcrypt from 'bcrypt'
 
 const prisma = new PrismaClient()
 
@@ -10,8 +10,8 @@ async function main() {
   await prisma.product.deleteMany()
   await prisma.user.deleteMany()
 
-  // Crear usuario admin primero
-  const hashedPassword = await bcrypt.hash('admin123', 10)
+  // Crear usuario admin con la nueva contraseña
+  const hashedPassword = await bcrypt.hash('vinorodante123', 10)
 
   await prisma.user.create({
     data: {
@@ -24,7 +24,7 @@ async function main() {
     }
   })
 
-  // Luego crear productos
+  // Crear productos
   const products = [
     {
       name: 'Club Básico',

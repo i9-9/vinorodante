@@ -1,18 +1,9 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { CartItem, Cart } from '@/types/cart';
 
-interface CartItem {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-  frequency: string;
-}
-
-interface CartStore {
-  items: CartItem[];
-  total: number;
-  addItem: (item: Omit<CartItem, 'quantity'>) => void;
+interface CartStore extends Cart {
+  addItem: (product: Omit<CartItem, 'quantity'>) => void;
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
@@ -23,54 +14,56 @@ export const useCart = create<CartStore>()(
     (set, get) => ({
       items: [],
       total: 0,
-      addItem: (item) => {
-        const currentItems = get().items;
-        const existingItem = currentItems.find((i) => i.id === item.id);
+      addItem: (product) => {
+        set((state) => {
+          const existingItem = state.items.find(item => item.id === product.id);
+          
+          if (existingItem) {
+            const updatedItems = state.items.map(item =>
+              item.id === product.id
+                ? { ...item, quantity: item.quantity + 1 }
+                : item
+            );
+            return {
+              items: updatedItems,
+              total: updatedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+            };
+          }
 
-        if (existingItem) {
-          set({
-            items: currentItems.map((i) =>
-              i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
-            ),
-            total: get().total + item.price,
-          });
-        } else {
-          set({
-            items: [...currentItems, { ...item, quantity: 1 }],
-            total: get().total + item.price,
-          });
-        }
+          const newItems = [...state.items, { ...product, quantity: 1 }];
+          return {
+            items: newItems,
+            total: newItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+          };
+        });
       },
       removeItem: (id) => {
-        const currentItems = get().items;
-        const itemToRemove = currentItems.find((i) => i.id === id);
-        if (itemToRemove) {
-          set({
-            items: currentItems.filter((i) => i.id !== id),
-            total: get().total - (itemToRemove.price * itemToRemove.quantity),
-          });
-        }
+        set((state) => {
+          const newItems = state.items.filter(item => item.id !== id);
+          return {
+            items: newItems,
+            total: newItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+          };
+        });
       },
       updateQuantity: (id, quantity) => {
-        const currentItems = get().items;
-        const item = currentItems.find((i) => i.id === id);
-        if (item) {
-          if (quantity <= 0) {
-            // Si la cantidad es 0 o menor, removemos el item
-            set({
-              items: currentItems.filter((i) => i.id !== id),
-              total: get().total - (item.price * item.quantity),
-            });
-          } else {
-            const quantityDiff = quantity - item.quantity;
-            set({
-              items: currentItems.map((i) =>
-                i.id === id ? { ...i, quantity } : i
-              ),
-              total: get().total + (item.price * quantityDiff),
-            });
+        set((state) => {
+          if (quantity < 1) {
+            const newItems = state.items.filter(item => item.id !== id);
+            return {
+              items: newItems,
+              total: newItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+            };
           }
-        }
+
+          const newItems = state.items.map(item =>
+            item.id === id ? { ...item, quantity } : item
+          );
+          return {
+            items: newItems,
+            total: newItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+          };
+        });
       },
       clearCart: () => set({ items: [], total: 0 }),
     }),

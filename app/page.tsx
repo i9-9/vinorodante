@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Loader from './components/Loader';
 import CartSidebar from './components/CartSidebar';
 import { useCart } from './store/cartStore';
+import { Button } from './components/Button';
 
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -33,9 +34,11 @@ export default function Home() {
               <Image 
                 src="/logo/logo_vr.svg" 
                 alt="Vino Rueda Logo" 
-                width={40}
-                height={40}
-                className="h-8 md:h-10 w-auto"
+                width={48}
+                height={48}
+                className="h-12 w-auto"
+                quality={100}
+                priority
               />
             </Link>
 
@@ -65,20 +68,24 @@ export default function Home() {
 
               {/* Hamburger Menu Button */}
               <button 
-                className="md:hidden p-2"
+                className="md:hidden relative w-8 h-8 flex items-center justify-center"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
               >
-                {isMenuOpen ? (
-                  <svg className="w-6 h-6 text-[#5B0E2D]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                ) : (
-                  <div className="space-y-2">
-                    <div className="w-6 h-0.5 bg-[#5B0E2D]"></div>
-                    <div className="w-6 h-0.5 bg-[#5B0E2D]"></div>
-                    <div className="w-6 h-0.5 bg-[#5B0E2D]"></div>
-                  </div>
-                )}
+                <div className="w-6 flex flex-col items-center justify-center gap-[6px]">
+                  <span className={`block h-0.5 bg-[#5B0E2D] transition-all duration-300 ease-out origin-center absolute ${
+                    isMenuOpen 
+                      ? 'w-6 rotate-45' 
+                      : 'w-6'
+                  }`}></span>
+                  <span className={`block h-0.5 w-6 bg-[#5B0E2D] transition-all duration-300 ease-out ${
+                    isMenuOpen ? 'opacity-0' : 'opacity-100'
+                  }`}></span>
+                  <span className={`block h-0.5 bg-[#5B0E2D] transition-all duration-300 ease-out origin-center absolute ${
+                    isMenuOpen 
+                      ? 'w-6 -rotate-45' 
+                      : 'w-6'
+                  }`}></span>
+                </div>
               </button>
             </div>
           </div>
@@ -110,12 +117,15 @@ export default function Home() {
           <h1 className="text-5xl mb-2 leading-[0,13px] tracking-normal font-pinot uppercase">
             EL VINO RUEDA EN EL TIEMPO Y CRECE CON LA HISTORIA
           </h1>
-          <a 
-            href="#explorar" 
-            className="inline-block px-8 py-4 bg-[#D4C1A1] text-[#5B0E2D] uppercase font-bold rounded hover:bg-[#E3C16F] transition-colors mt-6"
+          <Button 
+            variant="secondary" 
+            onClick={() => {
+              const element = document.getElementById('explorar');
+              element?.scrollIntoView({ behavior: 'smooth' });
+            }}
           >
             Explorar
-          </a>
+          </Button>
         </div>
       </section>
 
@@ -183,7 +193,8 @@ export default function Home() {
                   <p className="text-[#5B0E2D] mb-6 h-20">2 botellas mensuales de vino natural seleccionado</p>
                   <div className="flex flex-col gap-4">
                     <p className="font-bold text-2xl text-[#5B0E2D]">$45/mes</p>
-                    <button 
+                    <Button 
+                      variant="primary"
                       onClick={() => {
                         const product = {
                           id: 'club-basico',
@@ -194,10 +205,10 @@ export default function Home() {
                         cart.addItem(product);
                         setIsCartOpen(true);
                       }}
-                      className="w-full px-6 py-3 bg-[#A83935] text-[#D4C1A1] rounded-lg hover:bg-[#5B0E2D] transition-all duration-300 hover:scale-105 hover:shadow-md text-lg font-medium"
+                      className="w-full"
                     >
                       Agregar al carrito
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </div>
