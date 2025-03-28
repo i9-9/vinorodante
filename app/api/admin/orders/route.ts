@@ -1,3 +1,4 @@
+/*
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
@@ -33,4 +34,10 @@ export async function GET() {
       { status: 500 }
     );
   }
+}
+*/
+
+// Temporary placeholder response
+export async function GET() {
+  return new Response('API temporarily disabled', { status: 503 });
 } 

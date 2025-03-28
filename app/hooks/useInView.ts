@@ -1,35 +1,33 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 
-export function useInView<T extends HTMLElement = HTMLDivElement>(options = {}) {
-  const ref = useRef<T>(null);
+interface UseInViewOptions {
+  threshold?: number;
+  rootMargin?: string;
+}
+
+export function useInView(options: UseInViewOptions = {}) {
   const [isInView, setIsInView] = useState(false);
+  const elementRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        setIsInView(true);
-        // Una vez que el elemento es visible, dejamos de observarlo
-        if (ref.current) {
-          observer.unobserve(ref.current);
-        }
-      }
-    }, { 
-      threshold: 0.1,
-      rootMargin: '50px',
-      ...options 
-    });
+    const currentElement = elementRef.current;
+    const currentOptions = { ...options };
 
-    if (ref.current) {
-      observer.observe(ref.current);
+    const observer = new IntersectionObserver(([entry]) => {
+      setIsInView(entry.isIntersecting);
+    }, currentOptions);
+
+    if (currentElement) {
+      observer.observe(currentElement);
     }
 
     return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
+      if (currentElement) {
+        observer.unobserve(currentElement);
       }
     };
-  }, []);
+  }, [options]);
 
-  return { ref, isInView };
+  return [elementRef, isInView] as const;
 } 
