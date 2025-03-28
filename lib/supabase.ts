@@ -1,4 +1,4 @@
-// Este archivo se usará más adelante cuando implementemos Supabase
+// Este archivo se usará cuando implementemos Supabase
 /*
 import { createClient } from '@supabase/supabase-js'
 

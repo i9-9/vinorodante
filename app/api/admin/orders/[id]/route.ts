@@ -25,7 +25,7 @@ export async function PATCH(
 }
 */
 
-// Temporary placeholder response
+// Placeholder response
 export async function PATCH() {
-  return new Response('API temporarily disabled', { status: 503 });
+  return new Response('Order update temporarily disabled', { status: 503 });
 } 

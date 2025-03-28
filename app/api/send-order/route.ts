@@ -1,3 +1,5 @@
+// Este archivo se usará más adelante cuando implementemos el envío de emails
+/*
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 
@@ -73,4 +75,10 @@ export async function POST(request: Request) {
     console.error('Error sending email:', error);
     return NextResponse.json({ error: 'Error sending email' }, { status: 500 });
   }
+}
+*/
+
+// Placeholder response
+export async function POST() {
+  return new Response('Email sending temporarily disabled', { status: 503 });
 } 

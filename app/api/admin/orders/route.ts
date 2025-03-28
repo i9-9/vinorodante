@@ -37,7 +37,7 @@ export async function GET() {
 }
 */
 
-// Temporary placeholder response
+// Placeholder response
 export async function GET() {
-  return new Response('API temporarily disabled', { status: 503 });
+  return new Response('Orders API temporarily disabled', { status: 503 });
 } 

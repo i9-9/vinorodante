@@ -1,4 +1,4 @@
-// Temporary placeholder response
+// Placeholder response
 export async function POST() {
-  return new Response('API temporarily disabled', { status: 503 });
+  return new Response('Authentication temporarily disabled', { status: 503 });
 } 
