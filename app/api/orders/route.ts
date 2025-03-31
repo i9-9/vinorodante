@@ -1,6 +1,14 @@
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
+export async function GET() {
+  return new Response('Orders API temporarily disabled', { status: 503 });
+}
+
+export async function POST() {
+  return new Response('Order creation temporarily disabled', { status: 503 });
+}
+
 export async function POST(request: Request) {
   try {
     const body = await request.json();

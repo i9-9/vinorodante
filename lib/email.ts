@@ -2,6 +2,11 @@ import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+// Temporary email service placeholder
+export const sendOrderConfirmation = async () => {
+  return Promise.resolve();
+};
+
 export async function sendOrderConfirmation(order: any) {
   try {
     await resend.emails.send({

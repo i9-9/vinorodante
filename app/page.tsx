@@ -6,13 +6,14 @@ import Loader from './components/Loader';
 import CartSidebar from './components/CartSidebar';
 import { useCart } from './store/cartStore';
 import { Button } from './components/Button';
+import Navbar from './components/Navbar';
 
 export default function Home() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const cart = useCart();
   const currentYear = new Date().getFullYear();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     setTimeout(() => {
@@ -26,86 +27,8 @@ export default function Home() {
 
   return (
     <main className="bg-[#D4C1A1] scroll-smooth">
-      {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 bg-[#D4C1A1] z-50">
-        <div className="mx-10 py-4">
-          <div className="flex justify-between items-center">
-            <Link href="#" className="flex items-center">
-              <Image 
-                src="/logo/logo_vr.svg" 
-                alt="Vino Rueda Logo" 
-                width={48}
-                height={48}
-                className="h-12 w-auto"
-                quality={100}
-                priority
-              />
-            </Link>
-
-            <div className="flex items-center gap-6">
-              {/* Desktop Menu */}
-              <div className="hidden md:flex gap-6">
-                <a href="#inicio" className="font-medium text-[#A83935] hover:text-[#5B0E2D] transition-colors duration-300 hover:scale-105 transform">
-                  Inicio
-                </a>
-                <a href="#explorar" className="font-medium text-[#A83935] hover:text-[#5B0E2D] text-base">
-                  Explorar
-                </a>
-                <a href="#nosotros" className="font-medium text-[#A83935] hover:text-[#5B0E2D] text-base">
-                  Nosotros
-                </a>
-              </div>
-
-              {/* Cart Icon */}
-              <button 
-                onClick={() => setIsCartOpen(true)} 
-                className="text-[#A83935] hover:text-[#5B0E2D]"
-              >
-                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
-                </svg>
-              </button>
-
-              {/* Hamburger Menu Button */}
-              <button 
-                className="md:hidden relative w-8 h-8 flex items-center justify-center"
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-              >
-                <div className="w-6 flex flex-col items-center justify-center gap-[6px]">
-                  <span className={`block h-0.5 bg-[#5B0E2D] transition-all duration-300 ease-out origin-center absolute ${
-                    isMenuOpen 
-                      ? 'w-6 rotate-45' 
-                      : 'w-6'
-                  }`}></span>
-                  <span className={`block h-0.5 w-6 bg-[#5B0E2D] transition-all duration-300 ease-out ${
-                    isMenuOpen ? 'opacity-0' : 'opacity-100'
-                  }`}></span>
-                  <span className={`block h-0.5 bg-[#5B0E2D] transition-all duration-300 ease-out origin-center absolute ${
-                    isMenuOpen 
-                      ? 'w-6 -rotate-45' 
-                      : 'w-6'
-                  }`}></span>
-                </div>
-              </button>
-            </div>
-          </div>
-
-          {/* Mobile Menu */}
-          <div className={`${isMenuOpen ? 'block' : 'hidden'} md:hidden mt-8 pt-4 border-t border-[#A83935]`}>
-            <div className="flex flex-col gap-4">
-              <a href="#inicio" className="font-medium text-[#A83935] hover:text-[#5B0E2D] text-base">
-                Inicio
-              </a>
-              <a href="#explorar" className="font-medium text-[#A83935] hover:text-[#5B0E2D] text-base">
-                Explorar
-              </a>
-              <a href="#nosotros" className="font-medium text-[#A83935] hover:text-[#5B0E2D] text-base">
-                Nosotros
-              </a>
-            </div>
-          </div>
-        </div>
-      </nav>
+      {/* Usar el componente Navbar */}
+      <Navbar />
 
       {/* Hero Section */}
       <section 
@@ -281,6 +204,16 @@ export default function Home() {
         isOpen={isCartOpen} 
         onClose={() => setIsCartOpen(false)} 
       />
+
+      {/* Hamburger Menu Button */}
+      <button 
+        className="md:hidden flex items-center justify-center px-4 py-2 text-[#5B0E2D] hover:text-[#A83935] transition-colors"
+        onClick={() => setIsMenuOpen(!isMenuOpen)}
+      >
+        <span className="font-pinot text-xl uppercase">
+          {isMenuOpen ? 'CERRAR' : 'MENU'}
+        </span>
+      </button>
     </main>
   );
 }
