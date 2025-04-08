@@ -9,6 +9,21 @@ export async function POST() {
   return new Response('Order creation temporarily disabled', { status: 503 });
 }
 
+// Comentamos todo el código original y dejamos solo una respuesta temporal
+/*
+// Código original comentado
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    const { userId, items, total } = body;
+    // ... resto del código original
+  } catch (error) {
+    return new Response('Error creating order', { status: 500 });
+  }
+}
+*/
+
+// Respuesta temporal
 export async function POST(request: Request) {
   try {
     const body = await request.json();
