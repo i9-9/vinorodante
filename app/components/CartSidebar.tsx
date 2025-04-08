@@ -10,7 +10,7 @@ export default function CartSidebar({ isOpen, onClose }: { isOpen: boolean; onCl
 
   const handleCheckout = () => {
     onClose(); // Cerramos el sidebar
-    window.location.href = '/checkout'; // Navegamos al checkout
+    window.location.href = '/checkout';
   };
 
   return (
