@@ -3,6 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  output = "../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -21,8 +22,6 @@ model User {
   address   String
   isAdmin   Boolean  @default(false)  // Para identificar administradores
   orders    Order[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 
   @@map("users")
 }
@@ -35,9 +34,8 @@ model Product {
   image       String
   stock       Int
   frequency   String
+  category    String
   orderItems  OrderItem[]
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
 
   @@map("products")
 }
@@ -53,8 +51,6 @@ model Order {
   phoneNumber    String
   notes         String?     // Para comentarios adicionales
   paymentStatus  String     @default("pending")
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
 
   @@map("orders")
 }
@@ -67,8 +63,6 @@ model OrderItem {
   product   Product  @relation(fields: [productId], references: [id])
   quantity  Int
   price     Float
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 
   @@map("order_items")
 } 

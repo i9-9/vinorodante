@@ -1,5 +1,5 @@
-import { PrismaClient } from '@prisma/client';
-import { createClient } from '@supabase/supabase-js';
+const { PrismaClient } = require('@prisma/client');
+const { createClient } = require('@supabase/supabase-js');
 
 async function testPrismaConnection() {
   const prisma = new PrismaClient();
@@ -27,7 +27,11 @@ async function testSupabaseConnection() {
   try {
     console.log('Testing Supabase connection...');
     const supabase = createClient(supabaseUrl, supabaseKey);
-    const { data, error } = await supabase.from('users').select('*').limit(1);
+    const { data, error } = await supabase
+      .schema('public')
+      .from('users')
+      .select('*')
+      .limit(1);
     
     if (error) throw error;
     
