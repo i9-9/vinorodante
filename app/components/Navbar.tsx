@@ -4,9 +4,14 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
-export default function Navbar() {
+// Define props for the Navbar
+interface NavbarProps {
+  onCartClick: () => void; // Function to open the cart
+}
+
+// Receive the onCartClick prop
+export default function Navbar({ onCartClick }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false);
 
   return (
     <nav className="fixed top-0 left-0 right-0 bg-[#D4C1A1] z-50">
@@ -27,8 +32,8 @@ export default function Navbar() {
 
           <div className="flex items-center gap-6">
             {/* Cart Icon */}
-            <button 
-              onClick={() => setIsCartOpen(true)} 
+            <button
+              onClick={onCartClick}
               className="text-[#A83935]"
             >
               <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">

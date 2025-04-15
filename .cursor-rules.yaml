@@ -1,0 +1,10 @@
+rules:
+  - name: CheckDependencyDocs
+    description: Suggest checking official documentation when importing external dependencies.
+    kind: suggestion # You can change this to 'warning' or 'error' if you prefer
+    selector:
+      kind: import_statement
+      source:
+        regex: '^(?!(\.|\/|@\/)).+' # Matches external imports (not local or alias)
+    message: |
+      Consider checking the official documentation for '{{source.text}}' to ensure correct usage and stay updated with best practices. 

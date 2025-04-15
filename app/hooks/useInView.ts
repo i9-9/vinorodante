@@ -6,13 +6,14 @@ export function useInView<T extends HTMLElement = HTMLDivElement>(options = {}) 
   const [isInView, setIsInView] = useState(false);
 
   useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
         setIsInView(true);
         // Una vez que el elemento es visible, dejamos de observarlo
-        if (ref.current) {
-          observer.unobserve(ref.current);
-        }
+        observer.unobserve(element);
       }
     }, { 
       threshold: 0.1,
@@ -20,16 +21,12 @@ export function useInView<T extends HTMLElement = HTMLDivElement>(options = {}) 
       ...options 
     });
 
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
+    observer.observe(element);
 
     return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
-      }
+      observer.unobserve(element);
     };
-  }, []);
+  }, [options]);
 
   return { ref, isInView };
 } 

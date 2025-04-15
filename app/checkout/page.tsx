@@ -17,7 +17,7 @@ const SHIPPING_COSTS = {
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { items: cart, total: subtotal, clearCart } = useCart();
+  const { items: cart, total: subtotal } = useCart();
   const [currentStep, setCurrentStep] = useState<CheckoutStep>('review');
   const [formData, setFormData] = useState({
     name: '',

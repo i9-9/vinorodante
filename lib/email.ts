@@ -2,12 +2,14 @@ import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Temporary email service placeholder
-export const sendOrderConfirmation = async () => {
-  return Promise.resolve();
-};
+interface Order {
+  id: string;
+  user: {
+    email: string;
+  };
+}
 
-export async function sendOrderConfirmation(order: any) {
+export async function sendOrderConfirmation(order: Order) {
   try {
     await resend.emails.send({
       from: 'Vino Rodante <orders@vinorodante.com>',

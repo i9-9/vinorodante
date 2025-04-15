@@ -1,12 +1,10 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { useCart } from '../store/cartStore';
 import { Button } from './Button';
 
 export default function CartSidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const { items: cartItems, total, removeItem, updateQuantity } = useCart();
-  const router = useRouter();
 
   const handleCheckout = () => {
     onClose(); // Cerramos el sidebar

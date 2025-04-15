@@ -1,0 +1,669 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# Vino Rodante - Project Rules for Cursor Editor
+
+## Design Consistency and AI Editor Guidelines
+
+1. **Design Persistence Rules**
+   - Document all design decisions in a central `DESIGN.md` file
+   - Reference design decisions in code comments using `@design` tags
+   - Create detailed component API documentation for the AI to reference
+
+2. **AI Editor Instructions**
+   - Add AI-specific comments before components: `/* @AI-preserve-design */`
+   - Include explicit instructions in file headers about what can and cannot be changed
+   - Use consistent prefixes for components that should maintain their design: `Core`, `Base`, or `Design`
+
+3. **Preventing Unwanted Changes**
+   - Create unchangeable design constants in a separate file (`designTokens.ts`)
+   - Document component props clearly indicating which ones affect styling
+   - Use TypeScript unions or enums for style variants instead of arbitrary strings
+   - Example:
+     ```typescript
+     // @AI-preserve-design
+     // This component's visual design should remain consistent.
+     // Only add functionality within the existing design patterns.
+     export type ButtonVariant = 'primary' | 'secondary' | 'text';
+     ```
+
+4. **Documentation Standards**
+   - Maintain a screenshots directory showing correct component appearances
+   - Document component hierarchy and relationships
+   - Create storybook stories demonstrating all component variants
+   - Include explicit notes about design intent in JSDoc comments
+
+5. **Design System Enforcement**
+   - Create a separate `design-system` directory with theme constants
+   - Reference color tokens by name rather than hex values
+   - Define spacing, typography, and breakpoints in single source of truth
+   - Example:
+     ```typescript
+     // design-system/theme.ts
+     // @AI-preserve - Do not modify these token values or mappings
+     export const colors = {
+       primary: {
+         main: '#6a2c91',
+         light: '#9251bf',
+         dark: '#4b1d6a',
+       },
+       // ... more colors
+     };
+     ```
+
+## Project Structure
+
+1. **App Router Structure**
+   - Use Next.js App Router for routing
+   - Organize routes in `app` directory following Next.js conventions
+   - Use layout components for shared UI elements
+   ```
+   /app
+     /layout.tsx
+     /page.tsx
+     /(routes)
+       /wines
+         /page.tsx
+         /[id]
+           /page.tsx
+       /tours
+         /page.tsx
+   ```
+
+2. **Feature-Based Organization**
+   - Group related files by feature within appropriate directories
+   ```
+   /features
+     /wines
+       /components
+       /hooks
+       /types
+     /tours
+       /components
+       /hooks
+       /types
+   ```
+
+3. **Component Structure**
+   - Each component should be in its own file
+   - Use index files for exporting multiple components
+   - Group related components in folders
+   ```
+   /components
+     /ui
+       Button.tsx
+       Card.tsx
+       index.ts
+     /layout
+       Header.tsx
+       Footer.tsx
+       index.ts
+   ```
+
+## TypeScript Conventions
+
+1. **Type Definitions**
+   - Create separate type files for shared types
+   - Use explicit type annotations for function parameters and return types
+   - Use interfaces for objects with methods, types for simple structures
+
+2. **Naming Conventions**
+   - Interface names: `IWine`, `ITour`, or `WineProps`, `TourProps`
+   - Type names: `WineType`, `TourType` or simply `Wine`, `Tour`
+   - Enums: `WineStatus`, `TourStatus`
+
+3. **Example Types**
+   ```typescript
+   // types/wines.ts
+   export interface Wine {
+     id: string;
+     name: string;
+     region: string;
+     year: number;
+     price: number;
+     description: string;
+     imageUrl: string;
+     inStock: boolean;
+   }
+
+   export type WineFilterOptions = {
+     region?: string;
+     minYear?: number;
+     maxYear?: number;
+     minPrice?: number;
+     maxPrice?: number;
+   };
+   ```
+
+## State Management with Zustand
+
+1. **Store Creation**
+   - Create separate stores for different domains
+   - Keep stores small and focused on specific functionality
+   - Use TypeScript for type safety in stores
+
+2. **Store Structure**
+   ```typescript
+   // store/wineStore.ts
+   import { create } from 'zustand';
+   import { Wine } from '@/types/wines';
+
+   interface WineState {
+     wines: Wine[];
+     loading: boolean;
+     error: string | null;
+     fetchWines: () => Promise<void>;
+     addWine: (wine: Omit<Wine, 'id'>) => Promise<void>;
+     updateWine: (id: string, wine: Partial<Wine>) => Promise<void>;
+     deleteWine: (id: string) => Promise<void>;
+   }
+
+   export const useWineStore = create<WineState>((set, get) => ({
+     wines: [],
+     loading: false,
+     error: null,
+     fetchWines: async () => {
+       set({ loading: true, error: null });
+       try {
+         // Fetch logic
+         const data = await fetch('/api/wines').then(res => res.json());
+         set({ wines: data, loading: false });
+       } catch (error) {
+         set({ error: error.message, loading: false });
+       }
+     },
+     addWine: async (wine) => {
+       // Implementation
+     },
+     updateWine: async (id, wine) => {
+       // Implementation
+     },
+     deleteWine: async (id) => {
+       // Implementation
+     },
+   }));
+   ```
+
+3. **Using Stores in Components**
+   - Use selectors to access only the state properties needed
+   - Example:
+     ```typescript
+     const wines = useWineStore(state => state.wines);
+     const fetchWines = useWineStore(state => state.fetchWines);
+     ```
+
+## Coding Standards for Cursor Editor
+
+1. **Comments and Documentation**
+   - Use JSDoc comments for functions and components
+   - Provide context for complex logic with inline comments
+   - Document the purpose and usage of hooks and utilities
+
+   ```typescript
+   /**
+    * Hook for fetching and filtering wines from the API
+    * @param filters - Optional filters to apply to the wine list
+    * @returns Object containing wines, loading state, and error message
+    */
+   function useWineData(filters?: WineFilterOptions) {
+     // Implementation
+   }
+   ```
+
+2. **Code Organization**
+   - Keep functions and components small and focused
+   - Extract reusable logic into custom hooks
+   - Group related constants and utilities
+
+3. **Error Handling**
+   - Implement proper error boundaries in React components
+   - Use try/catch for async operations
+   - Provide helpful error messages for debugging
+
+## API Structure and Data Fetching
+
+1. **API Routes**
+   - Create API routes in `app/api` directory
+   - Implement proper error handling and status codes
+   - Use consistent response formats
+
+   ```typescript
+   // app/api/wines/route.ts
+   import { NextResponse } from 'next/server';
+
+   export async function GET(request: Request) {
+     try {
+       // Fetch data from database
+       return NextResponse.json(data);
+     } catch (error) {
+       return NextResponse.json(
+         { error: 'Failed to fetch wines' }, 
+         { status: 500 }
+       );
+     }
+   }
+   ```
+
+2. **Data Fetching in Components**
+   - Use React Query or SWR for client-side data fetching
+   - Implement loading states for better UX
+   - Handle errors gracefully with fallback UI
+
+3. **Server Components vs. Client Components**
+   - Use Server Components for data fetching and initial rendering
+   - Use Client Components for interactive elements
+   - Clearly mark client components with 'use client' directive
+
+## Styling with Tailwind CSS
+
+1. **Tailwind Conventions**
+   - Use Tailwind's utility classes for styling
+   - Create consistent class ordering (layout, typography, colors, etc.)
+   - Extract common patterns to components
+
+2. **Custom Theme Configuration**
+   - Extend Tailwind theme with project-specific colors and styles
+   - Define custom utilities for repeated patterns
+   - Use CSS variables for dynamic theming
+
+3. **Responsive Design**
+   - Use Tailwind's responsive prefixes (sm:, md:, lg:, etc.)
+   - Design mobile-first and add breakpoints as needed
+   - Test on multiple device sizes
+
+## Forms and Validation
+
+1. **Form Handling**
+   - Use React Hook Form for complex forms
+   - Implement client-side validation
+   - Provide clear feedback for form errors
+
+2. **Validation Schema**
+   - Define validation schemas using Zod or Yup
+   - Reuse validation logic between client and server
+   - Provide helpful error messages
+
+   ```typescript
+   // schemas/wineSchema.ts
+   import { z } from 'zod';
+
+   export const wineSchema = z.object({
+     name: z.string().min(1, 'Name is required'),
+     region: z.string().min(1, 'Region is required'),
+     year: z.number().int().min(1900).max(new Date().getFullYear()),
+     price: z.number().positive('Price must be positive'),
+     description: z.string().optional(),
+     imageUrl: z.string().url().optional(),
+   });
+
+   export type WineFormData = z.infer<typeof wineSchema>;
+   ```
+
+## Testing in Cursor Editor
+
+1. **Component Testing**
+   - Use Jest and React Testing Library
+   - Focus on testing behavior, not implementation
+   - Write accessibility-focused tests
+
+2. **Test Organization**
+   - Co-locate tests with components
+   - Group tests by feature or page
+   - Use descriptive test names
+
+3. **Test Examples**
+   ```typescript
+   // components/WineCard.test.tsx
+   import { render, screen } from '@testing-library/react';
+   import WineCard from './WineCard';
+
+   describe('WineCard', () => {
+     const mockWine = {
+       id: '1',
+       name: 'Cabernet Sauvignon',
+       region: 'Napa Valley',
+       year: 2018,
+       price: 45.99,
+       description: 'Full-bodied red wine',
+       imageUrl: '/images/cabernet.jpg',
+       inStock: true
+     };
+
+     it('displays wine information correctly', () => {
+       render(<WineCard wine={mockWine} />);
+       
+       expect(screen.getByText('Cabernet Sauvignon')).toBeInTheDocument();
+       expect(screen.getByText('Napa Valley')).toBeInTheDocument();
+       expect(screen.getByText('2018')).toBeInTheDocument();
+       expect(screen.getByText('$45.99')).toBeInTheDocument();
+     });
+
+     it('indicates when wine is out of stock', () => {
+       render(<WineCard wine={{ ...mockWine, inStock: false }} />);
+       
+       expect(screen.getByText('Out of Stock')).toBeInTheDocument();
+     });
+   });
+   ```
+
+## Performance Optimization
+
+1. **Code Splitting**
+   - Use dynamic imports for large components or libraries
+   - Implement route-based code splitting with Next.js
+   - Lazy load images and heavy content
+
+2. **State Management Optimization**
+   - Use selectors to prevent unnecessary re-renders
+   - Implement memoization for expensive computations
+   - Monitor component re-renders
+
+3. **Build Optimization**
+   - Analyze bundle size with tools like `next bundle-analyzer`
+   - Optimize third-party dependencies
+   - Use tree-shaking for unused code
+
+## Git Workflow for Cursor Editor
+
+1. **Branch Strategy**
+   - Use feature branches for new features
+   - Use fix branches for bug fixes
+   - Follow naming convention: `feature/wine-filtering` or `fix/tour-booking-error`
+
+2. **Commit Guidelines**
+   - Write descriptive commit messages
+   - Use conventional commits format (feat, fix, docs, etc.)
+   - Keep commits focused on single changes
+
+3. **Pull Request Process**
+   - Create detailed PR descriptions
+   - Link PRs to issues or tickets
+   - Require code reviews before merging
+
+## Authentication and Authorization
+
+1. **Authentication Strategy**
+   - Use NextAuth.js for authentication
+   - Implement proper session management
+   - Support multiple authentication providers
+
+2. **Authorization Rules**
+   - Define clear role-based access control
+   - Implement server-side authorization checks
+   - Create middleware for protecting routes
+
+3. **User Experience**
+   - Implement intuitive login/registration flows
+   - Provide clear feedback for authentication errors
+   - Handle expired sessions gracefully
+
+## Error Handling and Monitoring
+
+1. **Client-Side Error Handling**
+   - Implement error boundaries for React components
+   - Show user-friendly error messages
+   - Log errors for debugging
+
+2. **Server-Side Error Handling**
+   - Use try/catch blocks for async operations
+   - Return appropriate status codes and error messages
+   - Log detailed error information
+
+3. **Monitoring**
+   - Implement error tracking with tools like Sentry
+   - Monitor performance metrics
+   - Set up alerts for critical errors
+
+## Accessibility Standards
+
+1. **Semantic HTML**
+   - Use proper HTML elements for their intended purpose
+   - Implement correct heading hierarchy
+   - Use ARIA attributes when necessary
+
+2. **Keyboard Navigation**
+   - Ensure all interactive elements are keyboard accessible
+   - Implement focus management for modals and complex widgets
+   - Test keyboard navigation flows
+
+3. **Screen Reader Support**
+   - Add alt text to images
+   - Use aria-label for elements without visible text
+   - Test with screen readers
+
+## Deployment and Environment Management
+
+1. **Environment Variables**
+   - Use `.env` files for environment-specific variables
+   - Document required environment variables
+   - Don't commit sensitive information
+
+2. **Deployment Pipeline**
+   - Set up CI/CD for automated testing and deployment
+   - Implement staging and production environments
+   - Use previews for pull requests
+
+3. **Build and Release Process**
+   - Create reproducible build process
+   - Implement versioning strategy
+   - Document deployment steps
+
+## Project-Specific Guidelines
+
+1. **Wine Data Structure**
+   - Define consistent schema for wine data
+   - Implement proper validation for wine properties
+   - Handle edge cases (missing data, special characters)
+
+2. **Tour Booking System**
+   - Implement clear booking workflow
+   - Handle time zones appropriately
+   - Validate availability before confirming bookings
+
+3. **User Preferences**
+   - Store user preferences using cookies or local storage
+   - Implement proper data persistence
+   - Respect user privacy and provide clear consent options
+
+## Cursor AI Editor Guidelines
+
+1. **Setting Boundaries for AI**
+   - Create an `.ai-config` file in the project root with explicit rules
+   - Use special comment blocks to mark sections as unchangeable
+   - Create AI-specific prompt templates for common tasks that preserve design
+   - Example `.ai-config.json`:
+     ```json
+     {
+       "designProtection": true,
+       "protectedComponents": [
+         "Button", "Card", "Header", "Footer", "Layout", "WineCard"
+       ],
+       "protectedDirectories": [
+         "components/ui", "design-system"
+       ],
+       "allowedModifications": {
+         "components/ui": ["functionality", "props", "types"],
+         "design-system": ["additions", "documentation"]
+       }
+     }
+     ```
+
+2. **AI-Friendly Code Comments**
+   - Use standardized comment formats that Cursor AI can recognize:
+     ```typescript
+     // @AI-PRESERVE-DESIGN: This component's styling should not be changed
+     // @AI-MODIFY-FUNCTIONALITY-ONLY: Add features without changing appearance
+     // @AI-DESIGN-REFERENCE: See /docs/design/button-specs.md for visual requirements
+     ```
+
+3. **Working With Cursor AI**
+   - Structure prompts with clear constraints: "Add X functionality WITHOUT changing the design"
+   - Reference specific design documents in your prompts
+   - When reviewing AI changes, use "explain your changes" feature to understand modifications
+   - Save versions of components before asking for AI changes
+
+4. **Prompt Templates for Preserving Design**
+   - Use consistent prompt formats for common tasks:
+     ```
+     Add [functionality] to [component] while preserving its current visual design.
+     Refer to the design tokens in design-system/theme.ts for any necessary values.
+     Do not modify the existing styling approach or class structure.
+     ```
+
+5. **Cursor Productivity Features**
+   - Use Cursor's AI features for code completion and suggestions
+   - Utilize AI-powered documentation generation
+   - Leverage code explanations for complex logic
+   - Create custom snippets for design-preserving component templates
+
+6. **Linting and Formatting**
+   - Integrate ESLint and Prettier with Cursor
+   - Create custom ESLint rules for design consistency
+   - Use TypeScript strict mode for better type checking
+   - Add lint rules to prevent direct use of color values or spacing numbers
+
+## Documentation
+
+1. **Code Documentation**
+   - Document components and functions with JSDoc comments
+   - Provide examples for complex functions
+   - Keep documentation up-to-date with code changes
+   - Include explicit `@maintain-design` or `@flexible-design` tags
+
+2. **Component Documentation Requirements**
+   - Every component must include:
+     ```typescript
+     /**
+      * @component ComponentName
+      * @description What the component does and its purpose
+      * @design-intent [preserve/flexible] - Brief explanation of design intent
+      * @visual-requirements List specific visual requirements that must not change
+      * @functional-requirements List functional aspects that can be extended
+      * @example
+      *   <ComponentName prop1="value" prop2={value} />
+      */
+     ```
+
+3. **Design Decision Documentation**
+   - Create and maintain a `DESIGN_DECISIONS.md` file
+   - Document each major design decision with rationale
+   - Reference ticket/issue numbers where applicable
+   - Format:
+     ```markdown
+     ## [Component/Feature Name]
+     
+     **Status**: [Finalized/In Progress/Under Review]
+     **Date**: YYYY-MM-DD
+     **Decision Makers**: [Names]
+     
+     ### Context
+     [Description of the design problem being solved]
+     
+     ### Decision
+     [The specific design choices made]
+     
+     ### Visual Requirements
+     - [List of visual aspects that must be maintained]
+     
+     ### Consequences
+     [What becomes easier or more difficult because of this design]
+     
+     ### References
+     [Links to mockups, design tools, or tickets]
+     ```
+
+4. **AI Editor Guidelines Document**
+   - Create `AI_EDITOR_GUIDELINES.md` with explicit instructions
+   - List components and features that should never be redesigned
+   - Document acceptable modifications patterns
+   - Include examples of allowed vs. disallowed changes
+
+5. **Project Documentation**
+   - Create README with setup instructions
+   - Document architectural decisions
+   - Provide usage examples for key features
+   - Include reference to design documentation
+
+6. **API Documentation**
+   - Document API endpoints and parameters
+   - Provide example requests and responses
+   - Include error handling information
+
+## Example Implementation
+
+Here's a simple example of a Wine component following these guidelines:
+
+```typescript
+// features/wines/components/WineCard.tsx
+'use client';
+
+import { useState } from 'react';
+import Image from 'next/image';
+import { Wine } from '@/types/wines';
+import { formatCurrency } from '@/utils/format';
+
+interface WineCardProps {
+  wine: Wine;
+  onAddToCart?: (wine: Wine) => void;
+}
+
+/**
+ * WineCard displays information about a wine with options to view details or add to cart
+ */
+export function WineCard({ wine, onAddToCart }: WineCardProps) {
+  const [isHovered, setIsHovered] = useState(false);
+  
+  const handleAddToCart = () => {
+    if (wine.inStock && onAddToCart) {
+      onAddToCart(wine);
+    }
+  };
+  
+  return (
+    <div 
+      className="relative rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div className="relative h-48 w-full">
+        <Image
+          src={wine.imageUrl || '/images/wine-placeholder.jpg'}
+          alt={wine.name}
+          fill
+          className="object-cover"
+        />
+      </div>
+      
+      <div className="p-4">
+        <h3 className="text-lg font-semibold">{wine.name}</h3>
+        <div className="text-sm text-gray-600">{wine.region}, {wine.year}</div>
+        <div className="mt-2 font-medium">{formatCurrency(wine.price)}</div>
+        
+        {!wine.inStock && (
+          <div className="mt-2 text-red-600 font-medium">Out of Stock</div>
+        )}
+        
+        <div className={`mt-3 flex justify-between items-center transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
+          <a 
+            href={`/wines/${wine.id}`}
+            className="text-indigo-600 hover:text-indigo-800 text-sm font-medium"
+          >
+            View Details
+          </a>
+          
+          <button
+            onClick={handleAddToCart}
+            disabled={!wine.inStock}
+            className="px-3 py-1 bg-indigo-600 text-white rounded-md text-sm disabled:bg-gray-400 disabled:cursor-not-allowed"
+          >
+            Add to Cart
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+```

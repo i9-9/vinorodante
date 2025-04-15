@@ -1,6 +1,5 @@
 'use client';
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
 import Loader from './components/Loader';
 import CartSidebar from './components/CartSidebar';
@@ -28,7 +27,7 @@ export default function Home() {
   return (
     <main className="bg-[#D4C1A1] scroll-smooth">
       {/* Usar el componente Navbar */}
-      <Navbar />
+      <Navbar onCartClick={() => setIsCartOpen(true)} />
 
       {/* Hero Section */}
       <section 
